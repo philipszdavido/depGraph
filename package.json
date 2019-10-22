@@ -1,0 +1,23 @@
+{
+    "name": "depGraph",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "bin": {
+        "depGraph": "./index.js"
+    },
+    "directories": {
+        "test": "test"
+    },
+    "dependencies": {
+        "@babel/cli": "latest",
+        "@babel/core": "latest",
+        "@babel/parser": "latest"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "Chidume Nnamdi <kurtwanger40@gmail.com>",
+    "license": "ISC"
+}
