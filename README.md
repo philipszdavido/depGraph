@@ -1,3 +1,5 @@
+# Description
+
 A dependency graph profiler that outputs the dependencies (both file and package dependencies) of a file.
 
 # Usage
