@@ -6,7 +6,7 @@ const Visitor = require('./visitor')
 const fs = require('fs')
 const path = require('path')
 const { parse } = require("@babel/parser")
-
+const {writeToCmp} = require("./utils")
 function checkFileOrPackageDependency(s = "") {
 
     /**
@@ -170,15 +170,16 @@ function _depTree(opts) {
 
 let tree = _depTree({ file: args /*"./test/test.js"*/ })
 
-l(tree)
+//l(tree)
 
 writeToJson(args, tree)
-
+writeToCmp(args)
 function writeToJson(id, graph) {
     //l("writing to json")
     graph = {...graph, id }
     let f = JSON.stringify(graph)
     fs.writeFileSync("depGraph.json", f)
 }
+
 // l(min)
 // fs.writeFileSync('test/test.min.js', min)
