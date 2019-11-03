@@ -6,7 +6,8 @@ const Visitor = require('./visitor')
 const fs = require('fs')
 const path = require('path')
 const { parse } = require("@babel/parser")
-const {writeToCmp} = require("./utils")
+const { writeToCmp } = require("./utils")
+
 function checkFileOrPackageDependency(s = "") {
 
     /**
@@ -26,7 +27,7 @@ function checkFileOrPackageDependency(s = "") {
             return true
         }
         if (ext.length == 0) {
-            for (let i = 0; i <= exts.length; i++) {
+            for (let i = 0; i <= exts.length - 1; i++) {
                 const file = s + exts[i]
                 if (fs.existsSync(file)) {
                     //l(file, " yes exists")
@@ -54,7 +55,7 @@ function getFileFullPath(s) {
 
     // l(s, " ext:" + ext)
     try {
-        for (let i = 0; i <= exts.length; i++) {
+        for (let i = 0; i <= exts.length - 1; i++) {
             const file = s + exts[i]
             if (fs.existsSync(file)) {
                 return file
@@ -64,7 +65,7 @@ function getFileFullPath(s) {
             return s
         }
         if (ext.length == 0) {
-            for (let i = 0; i <= exts.length; i++) {
+            for (let i = 0; i <= exts.length - 1; i++) {
                 const file = s + exts[i]
                 if (fs.existsSync(file)) {
                     return file
@@ -150,12 +151,16 @@ function _depTree(opts) {
 
     // check if file is a file dependency or package dependency
     if (checkFileOrPackageDependency(filePath)) {
+        //l("--------------")
+        //l(filePath)
         filePath = getFileFullPath(filePath)
+        h.fullPath = filePath
+            //l(filePath)
         reqs = getReqs(filePath)
         parent = path.dirname(filePath)
         reqs.forEach((req) => {
                 const reqPath = path.resolve(parent, req.value)
-                h.dependencies.push(_depTree({ filePath: reqPath, file: req.value }))
+                h.dependencies.push(_depTree({ filePath: reqPath /*, fullPath: filePath*/ , file: req.value }))
             })
             //l(h)
         return h
@@ -171,15 +176,19 @@ function _depTree(opts) {
 let tree = _depTree({ file: args /*"./test/test.js"*/ })
 
 //l(tree)
-
+//return
 writeToJson(args, tree)
+    //return
+
 writeToCmp(args)
+
 function writeToJson(id, graph) {
     //l("writing to json")
     graph = {...graph, id }
     let f = JSON.stringify(graph)
     fs.writeFileSync("depGraph.json", f)
 }
+
 
 // l(min)
 // fs.writeFileSync('test/test.min.js', min)
